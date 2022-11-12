@@ -19,9 +19,11 @@ public class PlayerController : MonoBehaviour
     public AudioClip moneySound;
     public AudioClip explodeSound;
 
+    [SerializeField] private float increaseSpeed = 1.0f;
+    [SerializeField] private float timeToSpeedIncrease = 15.0f;       // 1st time
+    private float speedChangeInterval = 15.0f;                      // interval
+
     [SerializeField] private GameManager gameManagerScript;
-
-
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
@@ -29,15 +31,22 @@ public class PlayerController : MonoBehaviour
         Physics.gravity *= gravityModifier;
         // Apply a small upward force at the start of the game
         playerRb.AddForce(Vector3.up * 5, ForceMode.Impulse);
+        gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
 
     }
 
     void Update()
     {
-        // While space is pressed and player is low enough, float up
-        if (!gameOver && Input.GetKey(KeyCode.Space)) //  
+        // While UpArrow is pressed and player is low enough, float up
+        if (!gameOver && Input.GetKey(KeyCode.UpArrow)) //  
         {
-            playerRb.AddForce(Vector3.up * floatForce);
+            playerRb.AddForce(Vector3.up * floatForce * increaseSpeed);
+        }
+
+        if (Time.deltaTime > timeToSpeedIncrease)
+        {
+            timeToSpeedIncrease = Time.deltaTime + speedChangeInterval;
+            increaseSpeed++;
         }
 
         if (transform.position.y > yMax)
@@ -65,15 +74,6 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Game Over!");
             Destroy(other.gameObject);
         } 
-
-        // if player collides with money, fireworks
-        else if (other.gameObject.CompareTag("Money"))
-        {
-            fireworksParticle.Play();
-            playerAudio.PlayOneShot(moneySound, 1.0f);
-            Destroy(other.gameObject);
-        }
-
     }
 
 }

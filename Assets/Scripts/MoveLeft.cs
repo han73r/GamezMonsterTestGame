@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class MoveLeft : MonoBehaviour
 {
-    public float speed;
     private PlayerController playerControllerScript;
     private float leftBound = -10;
+    private GameManager gameManagerScript;
+    [SerializeField] private float speed;
 
-    void Start()
+    private void Start()
     {
-        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerControllerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
+        gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManager>();
+        speed = gameManagerScript.gameSpeed;
     }
 
-    void Update()
+    private void Update()
     {
         // If game is not over, move to the left
         if (!playerControllerScript.gameOver)
@@ -26,6 +29,6 @@ public class MoveLeft : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
     }
+
 }

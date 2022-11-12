@@ -10,14 +10,14 @@ public class SpawnManager : MonoBehaviour
 
     private PlayerController playerControllerScript;
 
-    void Start()
+    public void StartSpawning()
     {
         InvokeRepeating("SpawnObjects", spawnDelay, spawnInterval);
-        playerControllerScript = GameObject.Find("Player").GetComponent<PlayerController>();
+        playerControllerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController>();
     }
 
     // Spawn obstacles
-    void SpawnObjects ()
+    public void SpawnObjects ()
     {
         // Set random spawn location and random object index
         Vector3 spawnLocation = new Vector3(30, Random.Range(5, 15), 0);
